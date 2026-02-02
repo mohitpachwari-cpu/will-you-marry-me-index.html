@@ -12,18 +12,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Arial", sans-serif;
+      font-family: Arial, sans-serif;
       overflow: hidden;
     }
 
     .card {
       background: white;
       padding: 40px 50px;
-      border-radius: 20px;
+      border-radius: 22px;
       text-align: center;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 35px rgba(0,0,0,0.18);
       position: relative;
-      width: 360px;
+      width: 380px;
       z-index: 2;
     }
 
@@ -35,6 +35,7 @@
     h1 {
       font-size: 22px;
       margin-bottom: 30px;
+      line-height: 1.4;
     }
 
     .buttons {
@@ -43,7 +44,7 @@
     }
 
     button {
-      padding: 12px 30px;
+      padding: 12px 32px;
       font-size: 16px;
       border: none;
       border-radius: 30px;
@@ -52,15 +53,18 @@
     }
 
     #yesBtn {
-      background: #ff4d6d;
+      background: #ff3b6b;
       color: white;
-      left: 40px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     #noBtn {
       background: #ddd;
       color: black;
-      right: 40px;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     /* Floating Hearts */
@@ -90,12 +94,31 @@
         opacity: 0;
       }
     }
+
+    /* Heart Explosion */
+    .explosion-heart {
+      position: fixed;
+      font-size: 24px;
+      animation: explode 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(1.5);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Floating Hearts Container -->
+  <!-- Floating Hearts -->
   <div class="hearts"></div>
 
   <!-- Background Music -->
@@ -103,13 +126,12 @@
     <source src="a-thousand-years.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Main Card -->
+  <!-- Card -->
   <div class="card">
-    <div class="emoji">🐱❤️</div>
+    <div class="emoji">🐱 ❤️</div>
 
     <h1>
-      <span id="name"></span>,<br>
-      will you marry me? 💍
+      <span id="name"></span>, will you marry me? 💍
     </h1>
 
     <div class="buttons">
@@ -147,28 +169,21 @@
        Background Music (on click)
     ---------------------------- */
     const music = document.getElementById("bgMusic");
-
     document.body.addEventListener("click", () => {
       if (music.paused) music.play();
     }, { once: true });
 
     /* ---------------------------
-       No Button Gets Faster
+       No Button Chaos Mode
     ---------------------------- */
     const noBtn = document.getElementById("noBtn");
     let speedMultiplier = 1;
 
     noBtn.addEventListener("mouseover", () => {
-      speedMultiplier += 0.5;
+      speedMultiplier += 0.6;
 
-      const card = document.querySelector(".card");
-      const rect = card.getBoundingClientRect();
-
-      const maxX = rect.width - noBtn.offsetWidth;
-      const maxY = rect.height - noBtn.offsetHeight;
-
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 60);
 
       noBtn.style.transition = `all ${0.25 / speedMultiplier}s linear`;
       noBtn.style.left = x + "px";
@@ -188,29 +203,48 @@
       heart.style.animationDuration = Math.random() * 3 + 4 + "s";
 
       document.querySelector(".hearts").appendChild(heart);
-
       setTimeout(() => heart.remove(), 7000);
     }
 
     setInterval(createHeart, 400);
 
     /* ---------------------------
-       YES Clicked
+       YES CLICK = HEART EXPLOSION
     ---------------------------- */
     function yesClicked() {
-      document.body.innerHTML = `
-        <div style="
-          height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:#ffd6e7;
-          font-family:Arial;
-          text-align:center;
-        ">
-          <h1>She said YES!!! 💖💍</h1>
-        </div>
-      `;
+      for (let i = 0; i < 40; i++) {
+        const heart = document.createElement("div");
+        heart.className = "explosion-heart";
+        heart.innerHTML = "❤️";
+
+        heart.style.left = "50%";
+        heart.style.top = "50%";
+
+        const x = (Math.random() - 0.5) * 600 + "px";
+        const y = (Math.random() - 0.5) * 600 + "px";
+
+        heart.style.setProperty("--x", x);
+        heart.style.setProperty("--y", y);
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+      }
+
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="
+            height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#ffd6e7;
+            font-family:Arial;
+            text-align:center;
+          ">
+            <h1>She said YES!!! 💖💍</h1>
+          </div>
+        `;
+      }, 900);
     }
   </script>
 

@@ -1,252 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Will You Marry Me?</title>
+<meta charset="UTF-8" />
+<title>Will You Marry Me?</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #ffd6e7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: #ffd6e7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-    .card {
-      background: white;
-      padding: 40px 50px;
-      border-radius: 22px;
-      text-align: center;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.18);
-      position: relative;
-      width: 380px;
-      z-index: 2;
-    }
+.card {
+  background: white;
+  padding: 50px;
+  border-radius: 26px;
+  text-align: center;
+  box-shadow: 0 30px 50px rgba(0,0,0,0.25);
+  width: 420px;
+  height: 360px;
+  position: relative;
+  z-index: 2;
+}
 
-    .emoji {
-      font-size: 60px;
-      margin-bottom: 10px;
-    }
+.emoji {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
 
-    h1 {
-      font-size: 22px;
-      margin-bottom: 30px;
-      line-height: 1.4;
-    }
+h1 {
+  font-size: 24px;
+  margin-bottom: 40px;
+}
 
-    .buttons {
-      position: relative;
-      height: 90px;
-    }
+.buttons {
+  position: relative;
+  width: 100%;
+  height: 140px;
+}
 
-    button {
-      padding: 12px 32px;
-      font-size: 16px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      position: absolute;
-    }
+button {
+  padding: 14px 36px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  position: absolute;
+}
 
-    #yesBtn {
-      background: #ff3b6b;
-      color: white;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+#yesBtn {
+  background: #ff3b6b;
+  color: white;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
-    #noBtn {
-      background: #ddd;
-      color: black;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+#noBtn {
+  background: #ddd;
+  color: black;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 80px;
+}
 
-    /* Floating Hearts */
-    .hearts {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 1;
-    }
+/* Floating Hearts */
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
 
-    .heart {
-      position: absolute;
-      bottom: -20px;
-      font-size: 20px;
-      animation: floatUp linear infinite;
-      opacity: 0.8;
-    }
+.heart {
+  position: absolute;
+  bottom: -20px;
+  font-size: 20px;
+  animation: floatUp linear infinite;
+}
 
-    @keyframes floatUp {
-      from {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      to {
-        transform: translateY(-100vh) scale(1.4);
-        opacity: 0;
-      }
-    }
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100vh); opacity: 0; }
+}
 
-    /* Heart Explosion */
-    .explosion-heart {
-      position: fixed;
-      font-size: 24px;
-      animation: explode 1.2s ease-out forwards;
-      pointer-events: none;
-    }
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 14px;
+  background: red;
+  top: -10px;
+  animation: confettiFall linear forwards;
+}
 
-    @keyframes explode {
-      0% {
-        transform: scale(0.5);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--x), var(--y)) scale(1.5);
-        opacity: 0;
-      }
-    }
-  </style>
+@keyframes confettiFall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Fireworks */
+.firework {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: gold;
+  animation: firework 1.2s ease-out forwards;
+}
+
+@keyframes firework {
+  from { transform: scale(0.3); opacity: 1; }
+  to {
+    transform: translate(var(--x), var(--y)) scale(1.6);
+    opacity: 0;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- Floating Hearts -->
-  <div class="hearts"></div>
+<div class="hearts"></div>
 
-  <!-- Background Music -->
-  <audio id="bgMusic" loop>
-    <source src="a-thousand-years.mp3" type="audio/mpeg">
-  </audio>
+<audio id="bgMusic" loop>
+  <source src="a-thousand-years.mp3" type="audio/mpeg">
+</audio>
 
-  <!-- Card -->
-  <div class="card">
-    <div class="emoji">🐱 ❤️</div>
+<div class="card">
+  <div class="emoji">🐱 ❤️</div>
+  <h1><span id="name"></span>, will you marry me? 💍</h1>
 
-    <h1>
-      <span id="name"></span>, will you marry me? 💍
-    </h1>
-
-    <div class="buttons">
-      <button id="yesBtn" onclick="yesClicked()">Yes</button>
-      <button id="noBtn">No</button>
-    </div>
+  <div class="buttons">
+    <button id="yesBtn" onclick="yesClicked()">Yes</button>
+    <button id="noBtn">No</button>
   </div>
+</div>
 
-  <script>
-    /* ---------------------------
-       Dynamic Name Rotation
-    ---------------------------- */
-    const names = [
-      "Pragyan",
-      "Kajol",
-      "Prag",
-      "Shreya",
-      "Jaan",
-      "Paan",
-      "Taan"
-    ];
+<script>
+/* Names */
+const names = ["Pragyan","Kajol","Prag","Shreya","Jaan","Paan","Taan"];
+let idx = 0;
+const nameEl = document.getElementById("name");
+setInterval(() => {
+  nameEl.textContent = names[idx];
+  idx = (idx + 1) % names.length;
+}, 1200);
+nameEl.textContent = names[0];
 
-    let nameIndex = 0;
-    const nameEl = document.getElementById("name");
+/* Music */
+const music = document.getElementById("bgMusic");
+document.body.addEventListener("click", () => {
+  if (music.paused) music.play();
+}, { once: true });
 
-    function updateName() {
-      nameEl.textContent = names[nameIndex];
-      nameIndex = (nameIndex + 1) % names.length;
-    }
+/* NO Button trapped inside */
+const noBtn = document.getElementById("noBtn");
+const box = document.querySelector(".buttons");
+let speed = 1;
 
-    updateName();
-    setInterval(updateName, 1200);
+noBtn.addEventListener("mouseenter", () => {
+  speed += 0.5;
+  const maxX = box.clientWidth - noBtn.offsetWidth;
+  const maxY = box.clientHeight - noBtn.offsetHeight;
+  noBtn.style.transition = `all ${0.25 / speed}s linear`;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+});
 
-    /* ---------------------------
-       Background Music (on click)
-    ---------------------------- */
-    const music = document.getElementById("bgMusic");
-    document.body.addEventListener("click", () => {
-      if (music.paused) music.play();
-    }, { once: true });
+/* Floating hearts */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤️";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = Math.random() * 14 + 16 + "px";
+  h.style.animationDuration = Math.random() * 3 + 4 + "s";
+  document.querySelector(".hearts").appendChild(h);
+  setTimeout(() => h.remove(), 7000);
+}, 400);
 
-    /* ---------------------------
-       No Button Chaos Mode
-    ---------------------------- */
-    const noBtn = document.getElementById("noBtn");
-    let speedMultiplier = 1;
+/* YES CLICK */
+function yesClicked() {
 
-    noBtn.addEventListener("mouseover", () => {
-      speedMultiplier += 0.6;
+  // Confetti
+  for (let i = 0; i < 120; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#ff3b6b","#ffd700","#4caf50","#2196f3"][Math.floor(Math.random()*4)];
+    c.style.animationDuration = Math.random() * 2 + 2 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
 
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 60);
+  // Fireworks
+  for (let i = 0; i < 40; i++) {
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = "50%";
+    f.style.top = "50%";
+    f.style.setProperty("--x", (Math.random()-0.5)*800 + "px");
+    f.style.setProperty("--y", (Math.random()-0.5)*800 + "px");
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1200);
+  }
 
-      noBtn.style.transition = `all ${0.25 / speedMultiplier}s linear`;
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    });
+  setTimeout(showCountdown, 1200);
+}
 
-    /* ---------------------------
-       Floating Hearts Generator
-    ---------------------------- */
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "❤️";
+/* Countdown Screen */
+function showCountdown() {
+  document.body.innerHTML = `
+    <div style="
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      background:#ffd6e7;
+      text-align:center;
+    ">
+      <h1>See you on 25th Feb 💍</h1>
+      <h2 id="timer"></h2>
+    </div>
+  `;
+  startTimer();
+}
 
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.fontSize = Math.random() * 15 + 15 + "px";
-      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+/* IST Countdown */
+function startTimer() {
+  const weddingTime = new Date("2026-02-25T20:00:00+05:30").getTime();
 
-      document.querySelector(".hearts").appendChild(heart);
-      setTimeout(() => heart.remove(), 7000);
-    }
+  setInterval(() => {
+    const now = new Date().getTime();
+    const diff = weddingTime - now;
 
-    setInterval(createHeart, 400);
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    /* ---------------------------
-       YES CLICK = HEART EXPLOSION
-    ---------------------------- */
-    function yesClicked() {
-      for (let i = 0; i < 40; i++) {
-        const heart = document.createElement("div");
-        heart.className = "explosion-heart";
-        heart.innerHTML = "❤️";
-
-        heart.style.left = "50%";
-        heart.style.top = "50%";
-
-        const x = (Math.random() - 0.5) * 600 + "px";
-        const y = (Math.random() - 0.5) * 600 + "px";
-
-        heart.style.setProperty("--x", x);
-        heart.style.setProperty("--y", y);
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 1200);
-      }
-
-      setTimeout(() => {
-        document.body.innerHTML = `
-          <div style="
-            height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#ffd6e7;
-            font-family:Arial;
-            text-align:center;
-          ">
-            <h1>She said YES!!! 💖💍</h1>
-          </div>
-        `;
-      }, 900);
-    }
-  </script>
+    document.getElementById("timer").innerHTML =
+      `${d} Days ${h} Hours ${m} Minutes ${s} Seconds`;
+  }, 1000);
+}
+</script>
 
 </body>
 </html>

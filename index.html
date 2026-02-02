@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Will You Marry Me?</title>
+
   <style>
     body {
       margin: 0;
@@ -12,33 +13,40 @@
       align-items: center;
       justify-content: center;
       font-family: "Arial", sans-serif;
+      overflow: hidden;
     }
 
     .card {
       background: white;
       padding: 40px 50px;
-      border-radius: 16px;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
       position: relative;
-      width: 350px;
+      width: 360px;
+      z-index: 2;
+    }
+
+    .emoji {
+      font-size: 60px;
+      margin-bottom: 10px;
     }
 
     h1 {
+      font-size: 22px;
       margin-bottom: 30px;
-      font-size: 24px;
     }
 
     .buttons {
       position: relative;
-      height: 80px;
+      height: 90px;
     }
 
     button {
-      padding: 12px 28px;
+      padding: 12px 30px;
       font-size: 16px;
       border: none;
-      border-radius: 25px;
+      border-radius: 30px;
       cursor: pointer;
       position: absolute;
     }
@@ -50,16 +58,59 @@
     }
 
     #noBtn {
-      background: #ccc;
+      background: #ddd;
       color: black;
       right: 40px;
     }
+
+    /* Floating Hearts */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-100vh) scale(1.4);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
+
 <body>
 
+  <!-- Floating Hearts Container -->
+  <div class="hearts"></div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="a-thousand-years.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Card -->
   <div class="card">
-    <h1>Will you marry me? 💍</h1>
+    <div class="emoji">🐱❤️</div>
+
+    <h1>
+      <span id="name"></span>,<br>
+      will you marry me? 💍
+    </h1>
 
     <div class="buttons">
       <button id="yesBtn" onclick="yesClicked()">Yes</button>
@@ -68,22 +119,84 @@
   </div>
 
   <script>
+    /* ---------------------------
+       Dynamic Name Rotation
+    ---------------------------- */
+    const names = [
+      "Pragyan",
+      "Kajol",
+      "Prag",
+      "Shreya",
+      "Jaan",
+      "Paan",
+      "Taan"
+    ];
+
+    let nameIndex = 0;
+    const nameEl = document.getElementById("name");
+
+    function updateName() {
+      nameEl.textContent = names[nameIndex];
+      nameIndex = (nameIndex + 1) % names.length;
+    }
+
+    updateName();
+    setInterval(updateName, 1200);
+
+    /* ---------------------------
+       Background Music (on click)
+    ---------------------------- */
+    const music = document.getElementById("bgMusic");
+
+    document.body.addEventListener("click", () => {
+      if (music.paused) music.play();
+    }, { once: true });
+
+    /* ---------------------------
+       No Button Gets Faster
+    ---------------------------- */
     const noBtn = document.getElementById("noBtn");
+    let speedMultiplier = 1;
 
     noBtn.addEventListener("mouseover", () => {
+      speedMultiplier += 0.5;
+
       const card = document.querySelector(".card");
-      const cardRect = card.getBoundingClientRect();
+      const rect = card.getBoundingClientRect();
 
-      const maxX = cardRect.width - noBtn.offsetWidth;
-      const maxY = cardRect.height - noBtn.offsetHeight;
+      const maxX = rect.width - noBtn.offsetWidth;
+      const maxY = rect.height - noBtn.offsetHeight;
 
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top = randomY + "px";
+      noBtn.style.transition = `all ${0.25 / speedMultiplier}s linear`;
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
     });
 
+    /* ---------------------------
+       Floating Hearts Generator
+    ---------------------------- */
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤️";
+
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 15 + 15 + "px";
+      heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+
+      document.querySelector(".hearts").appendChild(heart);
+
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    setInterval(createHeart, 400);
+
+    /* ---------------------------
+       YES Clicked
+    ---------------------------- */
     function yesClicked() {
       document.body.innerHTML = `
         <div style="
@@ -103,4 +216,3 @@
 
 </body>
 </html>
-
